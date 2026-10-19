@@ -1,0 +1,32 @@
+# Settings change log
+
+The running record of system and app settings changes: the ones Mike made by hand at Claude's request, and the ones Claude made. Times are local (EDT). Newest entries are at the bottom. Software installs are in [install-log.md](install-log.md).
+
+| Date / time | Who | Where | Change | Why |
+|---|---|---|---|---|
+| 2026-10-01 ~05:55 | Mike (asked by Claude) | System Settings → Privacy & Security → Screen & System Audio Recording | Turned on **Ghostty** | Lets Claude take screenshots (`screencapture`, Peekaboo) |
+| 2026-10-01 ~06:00 | Mike (asked by Claude) | System Settings → Privacy & Security → Accessibility | Turned on **Ghostty**, then quit and relaunched Ghostty (⌘Q) | Lets Claude click and type (Peekaboo, cliclick) |
+| 2026-10-01 06:21 | Claude | `~/.gitconfig` | `user.name "Mike S.B. Stitt"`, `user.email OLD@EMAIL.ADDRESS`, `init.defaultBranch main` | Commit identity |
+| 2026-10-01 06:22 | Claude | `~/.local/bin` | uv put `python`, `python3`, `python3.14` links here (Python 3.14.7) | This directory comes before `/usr/bin` on PATH, so these override the system Python 3.9 |
+| 2026-10-01 06:23 | Claude | `~/.zprofile` | Added `export JAVA_HOME=$(/usr/libexec/java_home -v 17)` | Gradle and FTC builds use Oracle JDK 17 |
+| 2026-10-01 06:26 | Claude | Android SDK | Accepted all SDK licenses (`sdkmanager --licenses`) | Required to install SDK packages |
+| 2026-10-01 06:27 | Claude | `~/.zprofile` | Added `ANDROID_HOME=$HOME/Library/Android/sdk`; appended `platform-tools` and `cmdline-tools/latest/bin` to PATH | adb and sdkmanager on PATH |
+| 2026-10-01 06:28 | Claude | `~/projects/FtcRobotController/local.properties`, `~/projects/ftc31459-26-27-biobuzz/local.properties` | `sdk.dir=/Users/INSERT_USER_NAME_HERE/Library/Android/sdk` | Command-line Gradle builds (these files are gitignored in those repos) |
+| 2026-10-01 06:36 | Claude (GUI) | Android Studio first-run wizard | **Don't send** usage statistics; install type **Standard**; SDK folder ~/Library/Android/sdk | First-run setup |
+| 2026-10-01 ~06:45 | Mike (asked by Claude) | System Settings → Lock Screen | Turn display off on battery when inactive → **Never**; on power adapter → **Never**; Require password after screen saver begins or display is turned off → **Never** | Keep the screen unlocked so Claude can automate the GUI. Verified with `pmset -g custom` (displaysleep 0) and `sysadminctl -screenLock status` (off) |
+| 2026-10-01 06:49 | Claude | `defaults -currentHost write com.apple.screensaver idleTime -int 0` | Screen saver start → **Never** | macOS 26's Lock Screen pane has no "Start Screen Saver when inactive" row (Settings search finds it, but it just opens Lock Screen). Undo with `defaults -currentHost delete com.apple.screensaver idleTime` |
+| 2026-10-01 06:52 | Claude (GUI) | Android Studio → open `~/projects/FtcRobotController` | **Trust Project** for FtcRobotController only. "Trust all projects in 'projects' folder" left **unchecked** | Official FIRST repo |
+| 2026-10-01 06:53 | Claude (GUI) | macOS prompt "Allow Android Studio to find devices on local networks?" | **Allow** (now under System Settings → Privacy & Security → Local Network) | Needed for wireless ADB deploys to the Control Hub |
+| 2026-10-01 06:53 | Claude | `~/projects/FtcRobotController/.gradle/config.properties` | `java.home` changed from Android Studio's bundled JBR to Oracle JDK 17.0.12, then re-synced with File → Sync Project with Gradle Files | This is the file behind Studio's Gradle JDK setting (`#GRADLE_LOCAL_JAVA_HOME`). The FTC docs say to use JDK 17. Sync succeeded (idea.log: "Updated project Jdk to: 17") |
+| 2026-10-01 06:53 | — (declined) | Android Studio notifications "Project update recommended: AGP upgrade" and "Migrate to Gradle Daemon toolchain" | **Not accepted** | The FTC README says not to change the AGP or Gradle versions |
+| 2026-10-01 06:55 | Claude (GUI) | macOS prompt "Allow REV Hardware Client 2 to find devices on local networks?" | **Allow** | Needed to reach the Control Hub over Wi-Fi |
+| 2026-10-01 ~06:59 | Mike (prompt raised by Claude's `osascript`) | macOS prompt "Ghostty wants access to control System Events" | Answered, **apparently Allow** (System Events then responded to AppleScript). Recorded under System Settings → Privacy & Security → Automation → Ghostty | Lets programs run from Ghostty use AppleScript UI scripting |
+| 2026-10-01 07:01 | Claude (GUI), **mistake** | macOS prompt "Allow jcef Helper to find devices on local networks?" | Clicked **Don't Allow**. Claude assumed it was the JetBrains IDEs' embedded browser, but it's `/Applications/REV Hardware Client 2.app/Contents/Frameworks/jcef Helper.app` (REV's network service) | Should be **on**. Fix: System Settings → Privacy & Security → Local Network → turn on "jcef Helper" |
+| 2026-10-01 ~07:05 | Checked by Claude | System Settings → Privacy & Security → Local Network | Shows **REV Hardware Client 2 ON, PyCharm ON, Android Studio ON**. There's no separate "jcef Helper" row (macOS groups helpers under the parent app). The 07:01 Don't Allow doesn't appear to have stuck; check again if REV can't see a Control Hub over Wi-Fi | PyCharm's local network access was allowed by Mike during its first launch |
+| 2026-10-01 ~13:00 | Mike | `gh auth login` | Signed in to github.com as **msb-stitt**, HTTPS, token kept in the macOS keychain, scopes `gist`, `read:org`, `repo`, `workflow`. Checked with `gh auth status` at 13:04 | Lets git clone the private `msb-stitt/ftc-claude`. Any account `msb-stitt` can reach is reachable from this machine |
+| 2026-10-01 14:28 | Claude | `scratch/ftc-claude/ftc31459-26-27-biobuzz/.git/config` | `checkout.defaultRemote = origin` | `git switch solutions-03` was ambiguous across origin, upstream and spires |
+| 2026-10-01 ~14:32 | Claude (GUI) | AdvantageScope 2D Field | Field set to **2026-2027 Field** (FTC) in both windows; the FTC "Experimental Feature" notice was dismissed with OK, and "Don't Show Again" was left unticked | Draw the FTC field instead of FRC |
+
+## Pending: changes to ask Mike for
+- [ ] PyCharm first launch: the JetBrains User Agreement is a legal agreement, so Mike accepts it himself. Then choose the free tier, no JetBrains account
+- [ ] Optional: System Settings → Battery → Options: stop the system sleeping when idle on power adapter. `pmset` shows `sleep 1` on both battery and AC. Wait and see whether this interrupts automation before changing it

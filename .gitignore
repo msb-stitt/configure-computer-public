@@ -1,0 +1,10 @@
+# Installer downloads are large; kept locally only (see .docs/install-log.md)
+install-media/*
+!install-media/README.md
+# The Windows PC's installers, the same way (see .docs/install-log-windows.md)
+install-media-windows/*
+!install-media-windows/README.md
+.DS_Store
+
+# Working clones and experiments; not part of this repo
+scratch/
